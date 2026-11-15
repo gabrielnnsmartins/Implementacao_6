@@ -2,6 +2,9 @@
 #include<stdlib.h>
 
 struct client{
+    int max_a;
+    int max_b;
+    int max_c;
     int res_a;
     int res_b;
     int res_c;
@@ -19,17 +22,17 @@ struct bank{
 
 void request_resource(struct bank *banco, struct client *clientes[], int posicao){
     if (banco != NULL && clientes[posicao] != NULL){
-        if(clientes[posicao]->res_a != 0 && banco->a > clientes[posicao]->res_a){
+        if(clientes[posicao]->res_a != 0 && banco->a > clientes[posicao]->res_a && (clientes[posicao]->max_a > clientes[posicao]->res_a || clientes[posicao]->max_a == clientes[posicao]->res_a)){
             clientes[posicao]->alocado_a = clientes[posicao]->res_a;
             banco->a -= clientes[posicao]->alocado_a;
         }
 
-        if(clientes[posicao]->res_b != 0 && banco->b > clientes[posicao]->res_b){
+        if(clientes[posicao]->res_b != 0 && banco->b > clientes[posicao]->res_b && (clientes[posicao]->max_b > clientes[posicao]->res_b || clientes[posicao]->max_b == clientes[posicao]->res_b)){
             clientes[posicao]->alocado_b = clientes[posicao]->res_b;
             banco->b -= clientes[posicao]->alocado_b;
         }
 
-        if(clientes[posicao]->res_c != 0 && banco->c > clientes[posicao]->res_c){
+        if(clientes[posicao]->res_c != 0 && banco->c > clientes[posicao]->res_c && (clientes[posicao]->max_c > clientes[posicao]->res_c || clientes[posicao]->max_c == clientes[posicao]->res_c)){
             clientes[posicao]->alocado_c = clientes[posicao]->res_c;
             banco->c -= clientes[posicao]->alocado_c;
         }
@@ -62,13 +65,9 @@ void release_resource(struct bank *banco, struct client *clientes[], int posicao
 }
 
 void iniciar_cliente(struct client *clientes[], int posicao, int unidade_a, int unidade_b, int unidade_c){
-    struct client *cliente = malloc(sizeof(struct client));
-
-    if(clientes[posicao] != NULL){
-        cliente->res_a = unidade_a;
-        cliente->res_b = unidade_b;
-        cliente->res_c = unidade_c;   
-    }
+        clientes[posicao]->res_a = unidade_a;
+        clientes[posicao]->res_b = unidade_b;
+        clientes[posicao]->res_c = unidade_c;   
 }
 
 void verificar_seguranca(struct bank *banco, struct client *clientes[], int n_clientes){
@@ -89,4 +88,40 @@ void verificar_seguranca(struct bank *banco, struct client *clientes[], int n_cl
 
         }
     }
+}
+
+int main(){
+    FILE *customer_file  = fopen("customer.txt", "r");
+
+    
+    if (customer_file != NULL){
+        char linha[1000];
+        char *line;
+        int a,b,c;
+        int i = 0;
+        line = fgets(linha, sizeof(linha), customer_file);
+
+        while(line != NULL){
+            i+=1;
+            line = fgets(linha, sizeof(linha), customer_file);
+        }
+
+        struct client *clientes = malloc(i*sizeof(struct client));
+
+        if (clientes != NULL){
+            rewind(customer_file);
+            line = fgets(linha, sizeof(linha), customer_file);
+
+            int j = 0;
+
+            while(line != NULL && j != i){
+                int verificador = sscanf(linha, "%d,%d,%d", &a,&b,&c);
+
+                if(verificador == 3){
+                    iniciar_cliente(&clientes,j,a,b,c);
+                }
+            }
+        }
+    }
+
 }
