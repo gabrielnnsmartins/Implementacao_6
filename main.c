@@ -17,7 +17,7 @@ struct bank{
     int c;
 };
 
-void release_resource(struct bank *banco, struct client *cliente){
+void request_resource(struct bank *banco, struct client *cliente){
     if (banco != NULL && cliente != NULL){
         if(cliente->res_a != 0 && banco->a > cliente->res_a){
             cliente->alocado_a = cliente->res_a;
@@ -32,6 +32,31 @@ void release_resource(struct bank *banco, struct client *cliente){
         if(cliente->res_c != 0 && banco->c > cliente->res_c){
             cliente->alocado_c = cliente->res_c;
             banco->c -= cliente->alocado_c;
+        }
+    }
+}
+
+void release_resource(struct bank *banco, struct client *cliente, int rel_a, int rel_b, int rel_c){
+    if (banco!= NULL && cliente != NULL){
+        if (rel_a != 0 || rel_a < 0){
+            if (cliente->alocado_a == rel_a || cliente->alocado_a > rel_a){
+                cliente->alocado_a -= rel_a;
+                banco->a += rel_a;
+            }
+        }
+
+         if (rel_b != 0 || rel_b < 0){
+            if (cliente->alocado_b == rel_b || cliente->alocado_b > rel_b){
+                cliente->alocado_b -= rel_b;
+                banco->b += rel_b;
+            }
+        }
+
+         if (rel_c != 0 || rel_c < 0){
+            if (cliente->alocado_c == rel_c || cliente->alocado_c > rel_c){
+                cliente->alocado_c -= rel_c;
+                banco->c += rel_c;
+            }
         }
     }
 }
