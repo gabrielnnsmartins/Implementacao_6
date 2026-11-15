@@ -8,7 +8,6 @@ struct client{
     int alocado_a;
     int alocado_b;
     int alocado_c;
-    struct client *next;
 };
 
 struct bank{
@@ -17,54 +16,54 @@ struct bank{
     int c;
 };
 
-void request_resource(struct bank *banco, struct client *cliente){
-    if (banco != NULL && cliente != NULL){
-        if(cliente->res_a != 0 && banco->a > cliente->res_a){
-            cliente->alocado_a = cliente->res_a;
-            banco->a -= cliente->alocado_a;
+void request_resource(struct bank *banco, struct client *clientes[], int posicao){
+    if (banco != NULL && clientes[posicao] != NULL){
+        if(clientes[posicao]->res_a != 0 && banco->a > clientes[posicao]->res_a){
+            clientes[posicao]->alocado_a = clientes[posicao]->res_a;
+            banco->a -= clientes[posicao]->alocado_a;
         }
 
-        if(cliente->res_b != 0 && banco->b > cliente->res_b){
-            cliente->alocado_b = cliente->res_b;
-            banco->b -= cliente->alocado_b;
+        if(clientes[posicao]->res_b != 0 && banco->b > clientes[posicao]->res_b){
+            clientes[posicao]->alocado_b = clientes[posicao]->res_b;
+            banco->b -= clientes[posicao]->alocado_b;
         }
 
-        if(cliente->res_c != 0 && banco->c > cliente->res_c){
-            cliente->alocado_c = cliente->res_c;
-            banco->c -= cliente->alocado_c;
+        if(clientes[posicao]->res_c != 0 && banco->c > clientes[posicao]->res_c){
+            clientes[posicao]->alocado_c = clientes[posicao]->res_c;
+            banco->c -= clientes[posicao]->alocado_c;
         }
     }
 }
 
-void release_resource(struct bank *banco, struct client *cliente, int rel_a, int rel_b, int rel_c){
-    if (banco!= NULL && cliente != NULL){
+void release_resource(struct bank *banco, struct client *clientes[], int posicao, int rel_a, int rel_b, int rel_c){
+    if (banco!= NULL && clientes[posicao] != NULL){
         if (rel_a != 0 || rel_a < 0){
-            if (cliente->alocado_a == rel_a || cliente->alocado_a > rel_a){
-                cliente->alocado_a -= rel_a;
+            if (clientes[posicao]->alocado_a == rel_a || clientes[posicao]->alocado_a > rel_a){
+                clientes[posicao]->alocado_a -= rel_a;
                 banco->a += rel_a;
             }
         }
 
          if (rel_b != 0 || rel_b < 0){
-            if (cliente->alocado_b == rel_b || cliente->alocado_b > rel_b){
-                cliente->alocado_b -= rel_b;
+            if (clientes[posicao]->alocado_b == rel_b || clientes[posicao]->alocado_b > rel_b){
+                clientes[posicao]->alocado_b -= rel_b;
                 banco->b += rel_b;
             }
         }
 
          if (rel_c != 0 || rel_c < 0){
-            if (cliente->alocado_c == rel_c || cliente->alocado_c > rel_c){
-                cliente->alocado_c -= rel_c;
+            if (clientes[posicao]->alocado_c == rel_c || clientes[posicao]->alocado_c > rel_c){
+                clientes[posicao]->alocado_c -= rel_c;
                 banco->c += rel_c;
             }
         }
     }
 }
 
-void iniciar_cliente(struct client **head, int unidade_a, int unidade_b, int unidade_c){
+void iniciar_cliente(struct client *clientes[], int posicao, int unidade_a, int unidade_b, int unidade_c){
     struct client *cliente = malloc(sizeof(struct client));
 
-    if(cliente != NULL){
+    if(clientes[posicao] != NULL){
         cliente->res_a = unidade_a;
         cliente->res_b = unidade_b;
         cliente->res_c = unidade_c;
@@ -81,4 +80,8 @@ void iniciar_cliente(struct client **head, int unidade_a, int unidade_b, int uni
             temp->next = cliente;
         }
     }
+}
+
+void verificar_seguranca(struct bank *banco, struct client *cliente){
+    
 }
