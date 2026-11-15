@@ -60,3 +60,25 @@ void release_resource(struct bank *banco, struct client *cliente, int rel_a, int
         }
     }
 }
+
+void iniciar_cliente(struct client **head, int unidade_a, int unidade_b, int unidade_c){
+    struct client *cliente = malloc(sizeof(struct client));
+
+    if(cliente != NULL){
+        cliente->res_a = unidade_a;
+        cliente->res_b = unidade_b;
+        cliente->res_c = unidade_c;
+        cliente->next = NULL;
+
+        if ((*head) == NULL){
+            (*head) = cliente;
+        }else{
+            struct client *temp = (*head);
+
+            while(temp->next != NULL){
+                temp = temp->next;
+            }
+            temp->next = cliente;
+        }
+    }
+}
