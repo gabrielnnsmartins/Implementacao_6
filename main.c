@@ -8,6 +8,7 @@ struct client{
     int alocado_a;
     int alocado_b;
     int alocado_c;
+    int eh_seguro;
 };
 
 struct bank{
@@ -66,22 +67,26 @@ void iniciar_cliente(struct client *clientes[], int posicao, int unidade_a, int 
     if(clientes[posicao] != NULL){
         cliente->res_a = unidade_a;
         cliente->res_b = unidade_b;
-        cliente->res_c = unidade_c;
-        cliente->next = NULL;
-
-        if ((*head) == NULL){
-            (*head) = cliente;
-        }else{
-            struct client *temp = (*head);
-
-            while(temp->next != NULL){
-                temp = temp->next;
-            }
-            temp->next = cliente;
-        }
+        cliente->res_c = unidade_c;   
     }
 }
 
-void verificar_seguranca(struct bank *banco, struct client *cliente){
-    
+void verificar_seguranca(struct bank *banco, struct client *clientes[], int n_clientes){
+
+    if (banco != NULL && clientes!= NULL){
+        int verificar_todos_a = 0;
+        int verificar_todos_b = 0;
+        int verificar_todos_c = 0;
+        int clientes_inseguros = malloc(n_clientes * sizeof(int));
+
+        for (int i = 0; i<n_clientes; i ++){
+            verificar_todos_a += clientes[i]->res_a;
+            verificar_todos_b += clientes[i]->res_b;
+            verificar_todos_c += clientes[i]->res_c;
+        }
+
+        if((verificar_todos_a < banco->a) && (verificar_todos_b < banco->b) && (verificar_todos_c < banco->c)){
+
+        }
+    }
 }
