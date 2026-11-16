@@ -133,13 +133,19 @@ void verificador_release_resource(struct bank *banco, struct client *clientes[],
     }  
 }
 
-void printar_resultados(struct client *clientes[], int n_clientes){
+void printar_resultados(struct bank *banco, struct client *clientes[], int n_clientes, FILE *resultado){
     if(clientes != NULL){
+
+        fprintf(resultado,"MAXIMUM | ALLOCATION | NEED\n");
+
         for (int i = 0; i<n_clientes; i++){
-            for(int j = 0; j<3; j++){
-                cliente
-            }
+            int need_a = clientes[i]->max_a - clientes[i]->alocado_a;
+            int need_b = clientes[i]->max_b - clientes[i]->alocado_b;
+            int need_c = clientes[i]->max_c - clientes[i]->alocado_c;
+
+            fprintf(resultado,"%d %d %d | %d %d %d | %d %d %d\n", clientes[i]->max_a, clientes[i]->max_b, clientes[i]->max_c, clientes[i]->alocado_a, clientes[i]->alocado_b, clientes[i]->alocado_c, need_a, need_b, need_c);
         }
+        fprintf(resultado,"AVAILABLE %d %d %d", banco->a, banco->b, banco->c);
     }
 }
 
@@ -147,7 +153,11 @@ void printar_resultados(struct client *clientes[], int n_clientes){
 void iniciar_cliente(struct client *clientes[], int posicao, int unidade_a, int unidade_b, int unidade_c){
         clientes[posicao]->max_a = unidade_a;
         clientes[posicao]->max_b = unidade_b;
-        clientes[posicao]->max_c = unidade_c;   
+        clientes[posicao]->max_c = unidade_c;
+        
+        clientes[posicao]->alocado_a = 0;
+        clientes[posicao]->alocado_b = 0;
+        clientes[posicao]->alocado_c = 0;  
 }
 
 void iniciar_banco(struct bank *banco, int unidade_a, int unidade_b, int unidade_c){
@@ -224,7 +234,4 @@ int main(int argc, char *argv[]){
     if (resultado != NULL){
         return 0;
     }
-
-    
-
 }
