@@ -25,22 +25,22 @@ void verificar_resource_request(struct bank *banco, struct client *clientes[], i
 
     clientes[posicao]->eh_seguro = 0;
 
-        if (clientes[posicao]->res_a > bank->a || clientes[posicao]->res-a > clientes[posicao]->max_a || clientes[posicao]->res_a < 0){
+        if (clientes[posicao]->res_a > banco->a || clientes[posicao]->res_a > clientes[posicao]->max_a || clientes[posicao]->res_a < 0){
     }else{
         clientes[posicao]->eh_seguro += 1;
     }
 
-       if (clientes[posicao]->res_b > bank->b || clientes[posicao]->res-b > clientes[posicao]->max_b || clientes[posicao]->res_b < 0){
+       if (clientes[posicao]->res_b > banco->b || clientes[posicao]->res_b > clientes[posicao]->max_b || clientes[posicao]->res_b < 0){
     }else{
         clientes[posicao]->eh_seguro += 1;
     }
 
-       if (clientes[posicao]->res_c > bank->c || clientes[posicao]->res-c > clientes[posicao]->max_c || clientes[posicao]->res_c < 0){
+       if (clientes[posicao]->res_c > banco->c || clientes[posicao]->res_c > clientes[posicao]->max_c || clientes[posicao]->res_c < 0){
     }else{
         clientes[posicao]->eh_seguro += 1;
     }
 
-    if(clientes[posicao]->eh-seguro == 3){
+    if(clientes[posicao]->eh_seguro == 3){
         request_resource(&banco, &clientes[posicao], posicao);
     }
 
@@ -72,34 +72,77 @@ void request_resource(struct bank *banco, struct client *clientes[], int posicao
     }
 }
 
+void release_resource(struct bank *banco, struct client *clientes[], int posicao, int rel_a, int rel_b, int rel_c){
+    if(rel_a > 0){
+        clientes[posicao]->alocado_a -= rel_a;
+        banco->a += rel_a;
+    }
 
-int release_resource(struct bank *banco, struct client *clientes[], int posicao, int rel_a, int rel_b, int rel_c){
+    if(rel_b > 0){
+        clientes[posicao]->alocado_b -= rel_b;
+        banco->b += rel_b;
+    }
+    
+    if(rel_c > 0){
+        clientes[posicao]->alocado_c -= rel_c;
+        banco->c += rel_c;
+    }
+
+}
+
+
+void verificador_release_resource(struct bank *banco, struct client *clientes[], int posicao, int rel_a, int rel_b, int rel_c){
+
+    int verificador_a = 0, verificador_b = 0 , verificador_c = 0;
     if (banco!= NULL && clientes[posicao] != NULL){
-        if (rel_a != 0 || rel_a < 0){
-            if (clientes[posicao]->alocado_a == rel_a){
-                return 3;
-            }(clientes[posicao]->alocado_a > rel_a){
-                return 4;
+        if (rel_a > 0){
+            if (clientes[posicao]->alocado_a < rel_a){
+                verificador_a +=1;
+                clientes[posicao]->eh_seguro += 1;
             }
-                clientes[posicao]->alocado_a -= rel_a;
-                banco->a += rel_a;
+        }else{
+            verificador_a += 2;
+            clientes[posicao]->eh_seguro += 1;
         }
 
-         if (rel_b != 0 || rel_b < 0){
-            if (clientes[posicao]->alocado_b == rel_b || clientes[posicao]->alocado_b > rel_b){
-                clientes[posicao]->alocado_b -= rel_b;
-                banco->b += rel_b;
+        if (rel_b > 0){
+            if (clientes[posicao]->alocado_b < rel_b){
+                verificador_b +=1;
+                clientes[posicao]->eh_seguro += 1;
             }
+        }else{
+            verificador_b += 2;
+            clientes[posicao]->eh_seguro += 1;
+        }
+    
+        if (rel_c > 0){
+            if (clientes[posicao]->alocado_c < rel_c){
+                verificador_c +=1;
+                clientes[posicao]->eh_seguro += 1;
+            }
+        }else{
+            verificador_c += 2;
+            clientes[posicao]->eh_seguro += 1;
         }
 
-         if (rel_c != 0 || rel_c < 0){
-            if (clientes[posicao]->alocado_c == rel_c || clientes[posicao]->alocado_c > rel_c){
-                clientes[posicao]->alocado_c -= rel_c;
-                banco->c += rel_c;
+        if (verificador_a == 0 && verificador_b == 0 && verificador_c == 0){
+            release_resource(banco, clientes ,posicao, rel_a, rel_b, rel_c );
+        }else{
+
+        }
+    }  
+}
+
+void printar_resultados(struct client *clientes[], int n_clientes){
+    if(clientes != NULL){
+        for (int i = 0; i<n_clientes; i++){
+            for(int j = 0; j<3; j++){
+                cliente
             }
         }
     }
 }
+
 
 void iniciar_cliente(struct client *clientes[], int posicao, int unidade_a, int unidade_b, int unidade_c){
         clientes[posicao]->max_a = unidade_a;
@@ -172,6 +215,16 @@ int main(int argc, char *argv[]){
 
 
         }
+    }else{
+        return 0;
     }
+
+    FILE *resultado = fopen("result.txt","w");
+
+    if (resultado != NULL){
+        return 0;
+    }
+
+    
 
 }
